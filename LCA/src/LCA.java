@@ -1,30 +1,28 @@
-public class LCA <Key extends Comparable<Key>, Value>
-{
-	Node root;
+public class LCA {
 
-	class Node
-	{
-		private Key key;
-		private Value val;
-		private Node left, right;
-		private int N;
+	Digraph digraph;
 
-		public Node(Key key, Value val, int N)
-		{
-			this.key = key;
-			this.val = val;
-			this.N = N;
+	public LCA(Digraph g) {
+		this.digraph = g;
+	}
+
+	public boolean hasCycle() {
+		DirectedCycle testDAG = new DirectedCycle(digraph);
+		return testDAG.hasCycle();
+	}
+
+	public int lowestCommonAncestor(int a, int b) {
+		if (hasCycle()) {
+			return -1;
+		} else if (digraph.V() == 0) {
+			return -1;
+		} else {
+			return 0;
 		}
 	}
 
-	class DAG
-	{
-		private Node root;
-		public DAG(Node root)
-		{
-			this.root = root;
-		}
+	public static void main(String[] rgs) {
+		Digraph v = new Digraph(2);
+		v.addEdge(0, 1);
 	}
-
-	
 }
