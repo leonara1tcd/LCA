@@ -1,72 +1,78 @@
 import static org.junit.Assert.*;
+import org.junit.Test;
 
-import org.junit.jupiter.api.Test;
-
-public class LCATest {
-
+public class LCATest
+{
+	
 	@Test
-	public void testNodeConstructor() {
-		Node tmp = new Node(1);
-		assertNotNull("test Node constructor: ", tmp);
+	public void testLCA() {
+		LCA<Integer, Integer> lca = new LCA<Integer, Integer>();
+
+		assertSame("Testing LCA for null root", null, lca.lowestCommonAncestor(lca.root, 1, 2));
+
+		lca.put(8, 8);   //        _8_
+		lca.put(7, 7);   //      /     \
+		lca.put(3, 3);   //    _3_      7
+		lca.put(1, 1);   //  /     \
+		lca.put(2, 2);   // 1       4
+		lca.put(4, 4);   //  \     /
+		lca.put(6, 6);   //   2   6
+		lca.put(5, 5);   //        \
+						//			5
+		assertSame("Testing for LCA of two nodes", 3, lca.lowestCommonAncestor(lca.root, 2,4));
+		assertSame("Testing for LCA where LCA itself is one of the nodes", 8, lca.lowestCommonAncestor(lca.root, 7,8));
+		assertSame("Testing for LCA where LCA itself is one of the nodes", 8, lca.lowestCommonAncestor(lca.root, 3,8));
 	}
 
+	
+	
 	@Test
-	public void testEmptyTree() {
-		LCA lca = new LCA();
-		assertNull("test to find LCA when tree is empty: ", lca.findLCA(1, 4));
-		assertEquals("test to find LCA when tree is empty: ", null, lca.findLCA(1, 4));
+	public void testDelete()
+	{
+		LCA<Integer, Integer> LCA = new LCA<Integer, Integer>();
+		LCA.delete(1);
+		assertEquals("Deleting from empty tree", "()", LCA.printKeysInOrder());
+
+		LCA.put(7, 7);   //        _7_
+		LCA.put(8, 8);   //      /     \
+		LCA.put(3, 3);   //    _3_      8
+		LCA.put(1, 1);   //  /     \
+		LCA.put(2, 2);   // 1       6
+		LCA.put(6, 6);   //  \     /
+		LCA.put(4, 4);   //   2   4
+		LCA.put(5, 5);   //        \
+						//			5
+
+		assertEquals("Checking order of constructed tree",
+				"(((()1(()2()))3((()4(()5()))6()))7(()8()))", LCA.printKeysInOrder());
+		
+		LCA.delete(9);
+		assertEquals("Deleting non-existent key",
+				"(((()1(()2()))3((()4(()5()))6()))7(()8()))", LCA.printKeysInOrder());
+
+		LCA.delete(8);
+		assertEquals("Deleting leaf", "(((()1(()2()))3((()4(()5()))6()))7())", LCA.printKeysInOrder());
+
+		LCA.delete(6);
+		assertEquals("Deleting node with single child",
+				"(((()1(()2()))3(()4(()5())))7())", LCA.printKeysInOrder());
+
+		LCA.delete(3);
+		assertEquals("Deleting node with two children",
+				"(((()1())2(()4(()5())))7())", LCA.printKeysInOrder());
+		
 	}
 
+
+	
 	@Test
-	public void testCommon() {
-		// test tree structure:
-		// 1
-		// 2 3
-		// 4 5 6 7
-		LCA lca = new LCA();
-		lca.root = new Node(1);
-		lca.root.left = new Node(2);
-		lca.root.right = new Node(3);
-		lca.root.left.left = new Node(4);
-		lca.root.left.right = new Node(5);
-		lca.root.right.left = new Node(6);
-		lca.root.right.right = new Node(7);
+	public void testPut() {
+		LCA<Integer, Integer> LCA = new LCA<Integer, Integer>();
+		LCA.put(1, null);
+		LCA.put(11, 1);
+		LCA.put(12,2);
+		LCA.put(12, 12);
 
-		assertEquals("LCA of 2 and 3: ", 1, lca.findLCA(2, 3).data);
-		assertEquals("LCA of 6 and 7: ", 3, lca.findLCA(6, 7).data);
-		assertEquals("LCA of 4 and 5: ", 2, lca.findLCA(4, 5).data);
-		assertEquals("LCA of 4 and 7: ", 1, lca.findLCA(4, 7).data);
-	}
-
-	@Test
-	public void testForTwoNodes() {
-		// test tree structure:
-		// 1
-		// 2
-		LCA lca = new LCA();
-		lca.root = new Node(1);
-		lca.root.left = new Node(2);
-
-		assertEquals("test to find LCA of tree with only root and one child: ", 1, lca.findLCA(1, 2).data);
-	}
-
-	@Test
-	public void testForNonExistentNodes() {
-		// test tree structure:
-		// 1
-		// 2 3
-		// 4 5 6 7
-
-		LCA lca = new LCA();
-		lca.root = new Node(1);
-		lca.root.left = new Node(2);
-		lca.root.right = new Node(3);
-		lca.root.left.left = new Node(4);
-		lca.root.left.right = new Node(5);
-		lca.root.right.left = new Node(6);
-		lca.root.right.right = new Node(7);
-
-		assertEquals("test to find ancestors of non-existent nodes in populated tree: ", null, lca.findLCA(8, 9));
-		assertEquals("test to find ancestors of non-existent nodes in populated tree: ", null, lca.findLCA(23, 100));
+		assertEquals("Putting nodes", "(()11(()12()))", LCA.printKeysInOrder());
 	}
 }
