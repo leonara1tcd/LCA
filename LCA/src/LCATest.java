@@ -75,4 +75,98 @@ public class LCATest
 
 		assertEquals("Putting nodes", "(()11(()12()))", LCA.printKeysInOrder());
 	}
+	
+
+	@Test
+	public void testEmpty()
+	{
+		DAG lca = new DAG(6);
+		assertEquals("Testing LCA is -1", -1, lca.findLCA(1, 3));
+	}
+	
+	
+	
+	@Test
+	public void testForNoCommonAncestors()
+	{
+		DAG lca = new DAG(11);
+		
+		lca.addEdge(0, 1);
+		lca.addEdge(0, 2);
+		lca.addEdge(1, 2);
+		lca.addEdge(2, 3);
+		lca.addEdge(3, 4);
+		lca.addEdge(1, 5);
+		lca.addEdge(3, 5);
+
+		assertEquals("Finding LCA when there is no LCA", 0, lca.findLCA(3, 1));
+		assertEquals("", 1, lca.findLCA(1, 2));
+		assertEquals("", 3, lca.findLCA(4, 5));
+
+		assertEquals("Finding LCA when one node doesnt exist", -1, lca.findLCA(6, 3));
+	}
+
+	@Test
+	public void testForDAG()
+	{
+		DAG dag = new DAG(10);
+		dag.addEdge(1, 2);
+		dag.addEdge(1, 3);
+		dag.addEdge(3, 4);
+		dag.addEdge(4, 5);
+		dag.addEdge(4, 6);
+
+		assertEquals("", 5, dag.E());
+		assertEquals("", 10, dag.V());
+		String ans = "[5, 6]";
+		assertEquals("",ans, dag.adj(4).toString());
+	}
+
+	
+	@Test
+	public void testAddEdge()
+	{
+		DAG test = new DAG(10);
+		test.addEdge(0, 2);
+
+		test.addEdge(-2, -5);
+		assertEquals("Testing edge count is 1", 1, test.E());
+
+		test.addEdge(1, 3);
+		assertEquals("Testing edge count is 2", 2, test.E());
+	}
+
+	@Test(expected=Exception.class)
+	public void exceptionTest()
+	{
+		//Can't make a directed graph with less than 0 vertices
+		DAG test = new DAG(-1);
+	}
+
+	
+	@Test
+	public void testsForCycle()
+	{
+		DAG test = new DAG(20);
+		test.addEdge(0, 1);
+		test.addEdge(1, 2);
+		test.addEdge(2, 0);
+
+		
+		test.findCycle(0);
+
+		//Has a cycle from 0 - 1 - 2 - 0, should return true.
+		assertTrue(test.hasCycle());
+
+		DAG test2 = new DAG(20);
+		test2.addEdge(0, 1);
+		test2.addEdge(1, 3);
+		test2.addEdge(2, 4);
+		test2.findCycle(0);
+		
+		//No Cycle exists, should return false
+		assertFalse(test2.hasCycle());
+	}
+
+
 }
