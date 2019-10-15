@@ -47,6 +47,7 @@ public class LCA<Key extends Comparable<Key>, Value> {
 
 	/**
 	 * Search BST for given key. Does there exist a key-value pair with given key?
+	 * 
 	 * @param key the search key
 	 * @return true if key is found and false otherwise
 	 */
@@ -56,6 +57,7 @@ public class LCA<Key extends Comparable<Key>, Value> {
 
 	/**
 	 * Search BST for given key. What is the value associated with given key?
+	 * 
 	 * @param key the search key
 	 * @return value associated with the given key if found, or null if no such key
 	 *         exists.
@@ -79,6 +81,7 @@ public class LCA<Key extends Comparable<Key>, Value> {
 
 	/**
 	 * Insert key-value pair into BST. If key already exists, update with new value.
+	 * 
 	 * @param key the key to insert
 	 * @param val the value associated with key
 	 */
@@ -127,7 +130,7 @@ public class LCA<Key extends Comparable<Key>, Value> {
 	 */
 	public Key median() {
 		if (isEmpty())
-			return null; 
+			return null;
 
 		else {
 			int median = (((size(root) + 1) / 2) - 1); // add 1 to size(root)
@@ -140,7 +143,7 @@ public class LCA<Key extends Comparable<Key>, Value> {
 		return node.key;
 	}
 
-	// find the node with equivalent key 
+	// find the node with equivalent key
 	private Node intToKey(Node node, int passedInt) {
 		int leftSize = (size(node.left));
 
@@ -186,7 +189,7 @@ public class LCA<Key extends Comparable<Key>, Value> {
 	}
 
 	/**
-	 * Pretty Printing the tree. Each node is on one line 
+	 * Pretty Printing the tree. Each node is on one line
 	 *
 	 * @return a multi-line string with the pretty ASCII picture of the tree.
 	 */
